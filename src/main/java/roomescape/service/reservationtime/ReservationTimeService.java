@@ -7,6 +7,7 @@ import java.util.Set;
 import org.springframework.stereotype.Service;
 import roomescape.exception.ConflictException;
 import roomescape.exception.ErrorCode;
+import roomescape.exception.InvalidInputException;
 import roomescape.exception.ResourceNotFoundException;
 import roomescape.repository.reservation.ReservationRepository;
 import roomescape.domain.reservationtime.ReservationTime;
@@ -32,7 +33,12 @@ public class ReservationTimeService {
 
 
     public ReservationTime save(final LocalTime startAt) {
-        ReservationTime reservationTime = ReservationTime.createNew(startAt);
+        ReservationTime reservationTime;
+        try {
+            reservationTime = ReservationTime.createNew(startAt);
+        } catch (IllegalArgumentException exception) {
+            throw new InvalidInputException(ErrorCode.INVALID_INPUT, exception.getMessage());
+        }
 
         if (reservationTimeRepository.existsByStartAt(startAt)) {
             throw new ConflictException(ErrorCode.RESERVATION_TIME_DUPLICATED, "같은 시간을 추가할 수 없습니다.");

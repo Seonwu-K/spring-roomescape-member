@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.exception.ConflictException;
 import roomescape.exception.ErrorCode;
+import roomescape.exception.InvalidInputException;
 import roomescape.exception.ResourceNotFoundException;
 import roomescape.repository.reservation.ReservationRepository;
 import roomescape.domain.theme.Theme;
@@ -24,7 +25,12 @@ public class ThemeService {
     }
 
     public Theme save(final String name, final String description, final String thumbnailUrl) {
-        Theme nonIdTheme = Theme.createNew(name, description, thumbnailUrl);
+        Theme nonIdTheme;
+        try {
+            nonIdTheme = Theme.createNew(name, description, thumbnailUrl);
+        } catch (IllegalArgumentException exception) {
+            throw new InvalidInputException(ErrorCode.INVALID_INPUT, exception.getMessage());
+        }
 
         if (themeRepository.existsByName(name)) {
             throw new ConflictException(ErrorCode.THEME_NAME_DUPLICATED, "테마 이름 중복은 불가능합니다.");

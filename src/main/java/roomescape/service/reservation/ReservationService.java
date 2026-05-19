@@ -8,6 +8,7 @@ import roomescape.repository.reservation.ReservationRepository;
 import roomescape.domain.reservationtime.ReservationTime;
 import roomescape.exception.ConflictException;
 import roomescape.exception.ErrorCode;
+import roomescape.exception.InvalidInputException;
 import roomescape.exception.ResourceNotFoundException;
 import roomescape.service.reservationtime.ReservationTimeService;
 import roomescape.domain.theme.Theme;
@@ -46,7 +47,12 @@ public class ReservationService {
 
         Theme theme = themeService.getById(themeId);
         ReservationTime reservationTime = reservationTimeService.getById(timeId);
-        Reservation nonIdReservation = Reservation.createNew(name, date, theme, reservationTime);
+        Reservation nonIdReservation;
+        try {
+            nonIdReservation = Reservation.createNew(name, date, theme, reservationTime);
+        } catch (IllegalArgumentException exception) {
+            throw new InvalidInputException(ErrorCode.INVALID_INPUT, exception.getMessage());
+        }
         reservationValidator.validateReservable(nonIdReservation);
 
         if(reservationRepository.existsByDateAndThemeIdAndTimeId(date, themeId, timeId)){
@@ -92,7 +98,12 @@ public class ReservationService {
         reservationValidator.validateUpdatable(reservation);
 
         ReservationTime reservationTime = reservationTimeService.getById(timeId);
-        Reservation updatedReservation = reservation.withDateAndTime(date, reservationTime);
+        Reservation updatedReservation;
+        try {
+            updatedReservation = reservation.withDateAndTime(date, reservationTime);
+        } catch (IllegalArgumentException exception) {
+            throw new InvalidInputException(ErrorCode.INVALID_INPUT, exception.getMessage());
+        }
         reservationValidator.validateReservable(updatedReservation);
 
         if (reservationRepository.existsByDateAndThemeIdAndTimeIdExcludingId(
