@@ -2,7 +2,6 @@ package roomescape.service.reservation;
 
 import java.time.LocalDate;
 import java.util.List;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import roomescape.domain.reservation.Reservation;
 import roomescape.repository.reservation.ReservationRepository;
@@ -54,11 +53,7 @@ public class ReservationService {
             throw new ConflictException(ErrorCode.RESERVATION_DUPLICATED, "동일한 시기에 예약을 할 수 없습니다.");
         }
 
-        try {
-            return reservationRepository.save(nonIdReservation);
-        } catch (DuplicateKeyException exception) {
-            throw new ConflictException(ErrorCode.RESERVATION_DUPLICATED, "동일한 시기에 예약을 할 수 없습니다.");
-        }
+        return reservationRepository.save(nonIdReservation);
     }
 
     public void deleteById(final long id) {
@@ -109,10 +104,6 @@ public class ReservationService {
             throw new ConflictException(ErrorCode.RESERVATION_DUPLICATED, "동일한 시기에 예약을 할 수 없습니다.");
         }
 
-        try {
-            return reservationRepository.update(updatedReservation);
-        } catch (DuplicateKeyException exception) {
-            throw new ConflictException(ErrorCode.RESERVATION_DUPLICATED, "동일한 시기에 예약을 할 수 없습니다.");
-        }
+        return reservationRepository.update(updatedReservation);
     }
 }
