@@ -71,11 +71,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     @Override
     public void deleteById(final long timeId) {
         String sql = "DELETE FROM reservation_time WHERE id = ?";
-        try {
-            jdbcTemplate.update(sql, timeId);
-        } catch (DataIntegrityViolationException exception) {
-            throw new ConflictException(ErrorCode.RESERVATION_TIME_IN_USE, "이미 예약된 시간은 삭제할 수 없습니다.");
-        }
+        jdbcTemplate.update(sql, timeId);
     }
 
     @Override
