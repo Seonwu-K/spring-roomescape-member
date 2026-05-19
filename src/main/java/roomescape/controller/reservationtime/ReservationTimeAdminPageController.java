@@ -82,7 +82,7 @@ public class ReservationTimeAdminPageController {
             return LocalTime.parse(startAt);
         } catch (DateTimeParseException exception) {
             throw new InvalidInputException(
-                    ErrorCode.INVALID_TIME_FORMAT,
+                    ErrorCode.INVALID_INPUT,
                     "시간 형식이 올바르지 않습니다. HH:mm 형식이어야 합니다."
             );
         }

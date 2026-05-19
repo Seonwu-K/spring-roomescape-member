@@ -66,7 +66,7 @@ class ReservationTimeAdminApiTest {
                 .when().post("/admin/reservation-times")
                 .then().log().all()
                 .statusCode(400)
-                .body("code", is("INVALID_TIME_FORMAT"))
+                .body("code", is("INVALID_INPUT"))
                 .body("status", is(400));
     }
 

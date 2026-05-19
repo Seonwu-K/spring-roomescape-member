@@ -196,7 +196,7 @@ class ReservationApiTest {
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(400)
-                .body("code", is("THEME_ID_REQUIRED"))
+                .body("code", is("INVALID_INPUT"))
                 .body("status", is(400));
     }
 
@@ -214,7 +214,7 @@ class ReservationApiTest {
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(400)
-                .body("code", is("INVALID_DATE_FORMAT"))
+                .body("code", is("INVALID_INPUT"))
                 .body("status", is(400));
     }
 
@@ -234,7 +234,7 @@ class ReservationApiTest {
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(400)
-                .body("code", is("INVALID_TYPE_VALUE"))
+                .body("code", is("INVALID_INPUT"))
                 .body("status", is(400));
     }
 
@@ -245,7 +245,7 @@ class ReservationApiTest {
                 .when().get("/themes/1/times/available")
                 .then().log().all()
                 .statusCode(400)
-                .body("code", is("INVALID_DATE_FORMAT"))
+                .body("code", is("INVALID_INPUT"))
                 .body("status", is(400));
     }
 

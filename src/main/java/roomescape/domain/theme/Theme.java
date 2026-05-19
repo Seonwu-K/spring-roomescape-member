@@ -22,7 +22,7 @@ public class Theme {
 
     private void validateName(final String name) {
         if (name == null || name.isBlank()) {
-            throw new InvalidInputException(ErrorCode.INVALID_THEME_NAME, "테마 이름은 비어있을 수 없습니다.");
+            throw new InvalidInputException(ErrorCode.INVALID_INPUT, "테마 이름은 비어있을 수 없습니다.");
         }
     }
 

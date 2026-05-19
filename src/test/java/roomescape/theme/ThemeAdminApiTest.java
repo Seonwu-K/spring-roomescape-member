@@ -69,7 +69,7 @@ class ThemeAdminApiTest {
                 .when().post("/admin/themes")
                 .then().log().all()
                 .statusCode(400)
-                .body("code", is("INVALID_THEME_NAME"))
+                .body("code", is("INVALID_INPUT"))
                 .body("status", is(400));
     }
 

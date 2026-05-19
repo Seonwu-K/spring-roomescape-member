@@ -63,11 +63,11 @@ public class Reservation {
 
     private void validate(final String name, final LocalDate date, final Theme theme, final ReservationTime time) {
         if (name == null || name.isBlank()) {
-            throw new InvalidInputException(ErrorCode.RESERVATION_NAME_REQUIRED, "예약자 이름은 비어 있을 수 없습니다.");
+            throw new InvalidInputException(ErrorCode.INVALID_INPUT, "예약자 이름은 비어 있을 수 없습니다.");
         }
 
         if (name.length() >= 10) {
-            throw new InvalidInputException(ErrorCode.RESERVATION_NAME_TOO_LONG, "예약자 이름은 10자 미만이어야 합니다.");
+            throw new InvalidInputException(ErrorCode.INVALID_INPUT, "예약자 이름은 10자 미만이어야 합니다.");
         }
 
         if(date == null) {

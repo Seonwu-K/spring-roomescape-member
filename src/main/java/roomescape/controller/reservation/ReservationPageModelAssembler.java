@@ -86,7 +86,7 @@ public class ReservationPageModelAssembler {
             return List.of();
         }
 
-        if (ErrorCode.RESERVATION_NAME_REQUIRED.getCode().equals(errorCode)) {
+        if (ErrorCode.INVALID_INPUT.getCode().equals(errorCode)) {
             return List.of();
         }
 

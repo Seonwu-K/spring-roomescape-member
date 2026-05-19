@@ -12,31 +12,31 @@ public class ReservationValidator {
 
     public void validateReservationName(final String name) {
         if (name == null || name.isBlank()) {
-            throw new InvalidInputException(ErrorCode.RESERVATION_NAME_REQUIRED, "예약자 이름은 필수입니다.");
+            throw new InvalidInputException(ErrorCode.INVALID_INPUT, "예약자 이름은 필수입니다.");
         }
     }
 
     public void validateCreateRequest(final java.time.LocalDate date, final Long themeId, final Long timeId) {
         if (themeId == null) {
-            throw new InvalidInputException(ErrorCode.THEME_ID_REQUIRED, "themeId는 필수입니다.");
+            throw new InvalidInputException(ErrorCode.INVALID_INPUT, "themeId는 필수입니다.");
         }
 
         if (timeId == null) {
-            throw new InvalidInputException(ErrorCode.RESERVATION_TIME_ID_REQUIRED, "timeId는 필수입니다.");
+            throw new InvalidInputException(ErrorCode.INVALID_INPUT, "timeId는 필수입니다.");
         }
 
         if (date == null) {
-            throw new InvalidInputException(ErrorCode.RESERVATION_DATE_REQUIRED, "날짜는 필수입니다.");
+            throw new InvalidInputException(ErrorCode.INVALID_INPUT, "날짜는 필수입니다.");
         }
     }
 
     public void validateUpdateRequest(final java.time.LocalDate date, final Long timeId) {
         if (timeId == null) {
-            throw new InvalidInputException(ErrorCode.RESERVATION_TIME_ID_REQUIRED, "timeId는 필수입니다.");
+            throw new InvalidInputException(ErrorCode.INVALID_INPUT, "timeId는 필수입니다.");
         }
 
         if (date == null) {
-            throw new InvalidInputException(ErrorCode.RESERVATION_DATE_REQUIRED, "날짜는 필수입니다.");
+            throw new InvalidInputException(ErrorCode.INVALID_INPUT, "날짜는 필수입니다.");
         }
     }
 
