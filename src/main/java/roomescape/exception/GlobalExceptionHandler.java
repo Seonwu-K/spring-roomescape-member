@@ -22,8 +22,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    private static final String VALIDATION_MESSAGE_SEPARATOR = "::";
-
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<ErrorResponse> handleApiException(final ApiException exception) {
         return errorResponse(exception.getStatus(), exception.getCode(), exception.getMessage());
@@ -147,8 +145,10 @@ public class GlobalExceptionHandler {
             return badRequest(ErrorCode.INVALID_INPUT.getCode(), "유효하지 않은 입력입니다.");
         }
 
-        ValidationErrorDetail validationErrorDetail = resolveValidationErrorDetail(fieldError);
-        return badRequest(validationErrorDetail.code(), validationErrorDetail.message());
+        return badRequest(
+                ErrorCode.INVALID_INPUT.getCode(),
+                resolveValidationMessage(fieldError)
+        );
     }
 
     private ResponseEntity<ErrorResponse> buildBindingErrorResponse(final FieldError fieldError) {
@@ -160,14 +160,10 @@ public class GlobalExceptionHandler {
             return badRequest(resolveBindingCode(fieldError), fieldError.getDefaultMessage());
         }
 
-        ValidationErrorDetail validationErrorDetail = resolveValidationErrorDetail(fieldError);
-        return badRequest(validationErrorDetail.code(), validationErrorDetail.message());
-    }
-
-    private FieldError findFirstFieldError(final MethodArgumentNotValidException exception) {
-        return exception.getBindingResult().getFieldErrors().stream()
-                .findFirst()
-                .orElse(null);
+        return badRequest(
+                ErrorCode.INVALID_INPUT.getCode(),
+                resolveValidationMessage(fieldError)
+        );
     }
 
     private FieldError findFirstFieldError(final BindException exception) {
@@ -193,19 +189,14 @@ public class GlobalExceptionHandler {
         return ErrorCode.INVALID_INPUT.getCode();
     }
 
-    private ValidationErrorDetail resolveValidationErrorDetail(final FieldError fieldError) {
+    private String resolveValidationMessage(final FieldError fieldError) {
         String defaultMessage = fieldError.getDefaultMessage();
 
-        if (Objects.isNull(defaultMessage) || !defaultMessage.contains(VALIDATION_MESSAGE_SEPARATOR)) {
-            if (Objects.isNull(defaultMessage)) {
-                return new ValidationErrorDetail(ErrorCode.INVALID_INPUT.getCode(), "유효하지 않은 입력입니다.");
-            }
-
-            return new ValidationErrorDetail(ErrorCode.INVALID_INPUT.getCode(), defaultMessage);
+        if (Objects.isNull(defaultMessage)) {
+            return "유효하지 않은 입력입니다.";
         }
 
-        String[] parts = defaultMessage.split(VALIDATION_MESSAGE_SEPARATOR, 2);
-        return new ValidationErrorDetail(parts[0], parts[1]);
+        return defaultMessage;
     }
 
     private String resolveMissingParameterCode(final String parameterName) {
