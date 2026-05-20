@@ -157,7 +157,7 @@ public class GlobalExceptionHandler {
         }
 
         if ("typeMismatch".equals(fieldError.getCode())) {
-            return badRequest(resolveBindingCode(fieldError), fieldError.getDefaultMessage());
+            return badRequest(ErrorCode.INVALID_INPUT.getCode(), fieldError.getDefaultMessage());
         }
 
         return badRequest(
@@ -183,10 +183,6 @@ public class GlobalExceptionHandler {
     ) {
         return ResponseEntity.status(status)
                 .body(new ErrorResponse(code, status.value(), message));
-    }
-
-    private String resolveBindingCode(final FieldError fieldError) {
-        return ErrorCode.INVALID_INPUT.getCode();
     }
 
     private String resolveValidationMessage(final FieldError fieldError) {
