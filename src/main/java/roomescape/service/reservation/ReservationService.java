@@ -8,7 +8,6 @@ import roomescape.repository.reservation.ReservationRepository;
 import roomescape.domain.reservationtime.ReservationTime;
 import roomescape.exception.ConflictException;
 import roomescape.exception.ErrorCode;
-import roomescape.exception.InvalidInputException;
 import roomescape.exception.ResourceNotFoundException;
 import roomescape.service.reservationtime.ReservationTimeService;
 import roomescape.domain.theme.Theme;
@@ -43,16 +42,12 @@ public class ReservationService {
     }
 
     public Reservation save(final String name, final LocalDate date, final Long themeId, final Long timeId) {
+        reservationValidator.validateReservationName(name);
         reservationValidator.validateCreateRequest(date, themeId, timeId);
 
         Theme theme = themeService.getById(themeId);
         ReservationTime reservationTime = reservationTimeService.getById(timeId);
-        Reservation nonIdReservation;
-        try {
-            nonIdReservation = Reservation.createNew(name, date, theme, reservationTime);
-        } catch (IllegalArgumentException exception) {
-            throw new InvalidInputException(ErrorCode.INVALID_INPUT, exception.getMessage());
-        }
+        Reservation nonIdReservation = Reservation.createNew(name, date, theme, reservationTime);
         reservationValidator.validateReservable(nonIdReservation);
 
         if(reservationRepository.existsByDateAndThemeIdAndTimeId(date, themeId, timeId)){
@@ -98,12 +93,7 @@ public class ReservationService {
         reservationValidator.validateUpdatable(reservation);
 
         ReservationTime reservationTime = reservationTimeService.getById(timeId);
-        Reservation updatedReservation;
-        try {
-            updatedReservation = reservation.withDateAndTime(date, reservationTime);
-        } catch (IllegalArgumentException exception) {
-            throw new InvalidInputException(ErrorCode.INVALID_INPUT, exception.getMessage());
-        }
+        Reservation updatedReservation = reservation.withDateAndTime(date, reservationTime);
         reservationValidator.validateReservable(updatedReservation);
 
         if (reservationRepository.existsByDateAndThemeIdAndTimeIdExcludingId(

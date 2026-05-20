@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeParseException;
 import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -105,7 +104,7 @@ public class GlobalExceptionHandler {
     private ResponseEntity<ErrorResponse> buildHttpMessageNotReadableResponse(
             final HttpMessageNotReadableException exception
     ) {
-        Throwable cause = exception.getMostSpecificCause();
+        Throwable cause = exception.getCause();
 
         if (cause instanceof InvalidFormatException invalidFormatException) {
             Class<?> targetType = invalidFormatException.getTargetType();
@@ -114,24 +113,6 @@ public class GlobalExceptionHandler {
                     resolveTypeMismatchCode(targetType),
                     resolveTypeMismatchMessage(targetType)
             );
-        }
-
-        if (cause instanceof DateTimeParseException) {
-            String message = exception.getMessage();
-
-            if (message.contains("java.time.LocalDate")) {
-                return badRequest(
-                        ErrorCode.INVALID_INPUT.getCode(),
-                        "날짜 형식이 올바르지 않습니다. yyyy-MM-dd 형식이어야 합니다."
-                );
-            }
-
-            if (message.contains("java.time.LocalTime")) {
-                return badRequest(
-                        ErrorCode.INVALID_INPUT.getCode(),
-                        "시간 형식이 올바르지 않습니다. HH:mm 형식이어야 합니다."
-                );
-            }
         }
 
         if (cause instanceof JsonParseException) {

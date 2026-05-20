@@ -14,6 +14,10 @@ public class ReservationValidator {
         if (name == null || name.isBlank()) {
             throw new InvalidInputException(ErrorCode.INVALID_INPUT, "예약자 이름은 필수입니다.");
         }
+
+        if (name.length() >= 10) {
+            throw new InvalidInputException(ErrorCode.INVALID_INPUT, "예약자 이름은 10자 미만이어야 합니다.");
+        }
     }
 
     public void validateCreateRequest(final java.time.LocalDate date, final Long themeId, final Long timeId) {
