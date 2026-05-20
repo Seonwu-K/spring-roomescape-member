@@ -200,27 +200,7 @@ public class GlobalExceptionHandler {
     }
 
     private String resolveMissingParameterMessage(final String parameterName) {
-        if ("name".equals(parameterName)) {
-            return "예약자 이름은 비어 있을 수 없습니다.";
-        }
-
-        if ("date".equals(parameterName)) {
-            return "날짜는 필수입니다.";
-        }
-
-        if ("themeId".equals(parameterName)) {
-            return "themeId는 필수입니다.";
-        }
-
-        if ("timeId".equals(parameterName)) {
-            return "timeId는 필수입니다.";
-        }
-
-        if ("startAt".equals(parameterName)) {
-            return "예약 시간은 필수입니다.";
-        }
-
-        return "유효하지 않은 입력입니다.";
+        return String.format("'%s' 파라미터가 누락되었습니다.", parameterName);
     }
 
     private String resolveTypeMismatchCode(final Class<?> targetType) {
